@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "332176553014",
+    "project_id": "dam-juan-andrey",
+    "storage_bucket": "dam-juan-andrey.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332176553014:android:9395e69bd2c63dc1855497",
+        "android_client_info": {
+          "package_name": "com.andrey.juan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFLG3bBm9HbszE8pI8EkukGhI214cUhQY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
