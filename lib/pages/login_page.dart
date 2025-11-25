@@ -19,30 +19,51 @@ class _LoginPageState extends State<LoginPage> {
     // return Container(child: Text('Login Page BRO'));
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        padding: EdgeInsets.all(20),
+      body: Container(        
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Colors.yellow.shade700, Color(0xFF051E34)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.purple, Colors.amber],
           ),
         ),
-        child: Container(
-          margin: EdgeInsets.only(top: 50),
+        child: Container(          
           decoration: BoxDecoration(
-            color: Color(0xAAFFFFFF),
+            color: Color.fromARGB(78, 255, 255, 255),
             borderRadius: BorderRadius.circular(15),
           ),
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 180, horizontal: 20),
-            color: Colors.white,
+            margin: EdgeInsets.symmetric(vertical: 200, horizontal: 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: ListView(
               children: [
-                Icon(MdiIcons.google, color: Colors.yellow.shade800, size: 70),
+                Text('Inicia Sesion', textAlign: TextAlign.center, style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber
+                    ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 105),
+                ),                                  
+                ShaderMask
+                (shaderCallback: (Rect bounds)
+                {
+                  return LinearGradient(
+                    colors: [Colors.amber, Colors.purple ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight
+                  ).createShader(bounds);
+                },
+                child: Icon(MdiIcons.google, color: Colors.white, size: 70
+                ),
+                ),
                 //boton
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
                   width: double.infinity,
                   child: BotonGoogle(),
                 ),
