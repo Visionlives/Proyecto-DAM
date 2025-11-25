@@ -12,7 +12,20 @@
           "package_name": "com.andrey.juan"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "332176553014-6afurjv30ulmlm3tli3fm3dlcs3auvhd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andrey.juan",
+            "certificate_hash": "ad6a4d3b632840cc5ce49ecee2900994c07289f7"
+          }
+        },
+        {
+          "client_id": "332176553014-bhgv1avi8p678vss8scqrgsh3ppd05m1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCFLG3bBm9HbszE8pI8EkukGhI214cUhQY"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "332176553014-bhgv1avi8p678vss8scqrgsh3ppd05m1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

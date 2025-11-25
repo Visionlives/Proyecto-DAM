@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:proyecto_dam/widgets/boton_google.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -34,48 +34,19 @@ class _LoginPageState extends State<LoginPage> {
             color: Color(0xAAFFFFFF),
             borderRadius: BorderRadius.circular(15),
           ),
-          child: Form(
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 180, horizontal: 20),
-              color: Colors.white,
-              child: ListView(
-                children: [
-                  Icon(
-                    MdiIcons.firebase,
-                    color: Colors.yellow.shade800,
-                    size: 70,
-                  ),
-                  //email
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-                    child: TextFormField(
-                      controller: emailCtrl,
-                      decoration: InputDecoration(labelText: 'Email'),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                  ),
-                  //password
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-                    child: TextFormField(
-                      controller: passwordCtrl,
-                      decoration: InputDecoration(labelText: 'Password'),
-                      obscureText: true,
-                    ),
-                  ),
-                  //boton
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                    width: double.infinity,
-                  ),
-                  //errores
-                  Container(
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: Text(msgError, style: TextStyle(color: Colors.red)),
-                  ),
-                ],
-              ),
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 180, horizontal: 20),
+            color: Colors.white,
+            child: ListView(
+              children: [
+                Icon(MdiIcons.google, color: Colors.yellow.shade800, size: 70),
+                //boton
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  width: double.infinity,
+                  child: BotonGoogle(),
+                ),
+              ],
             ),
           ),
         ),

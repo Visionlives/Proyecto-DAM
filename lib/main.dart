@@ -1,8 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:proyecto_dam/auth_services.dart';
-import 'package:proyecto_dam/pages/home_page.dart';
-import 'package:proyecto_dam/pages/login_page.dart';
+import 'package:proyecto_dam/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +35,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: HomePage(),
+      home: AuthWrapper(),
     );
   }
 }
