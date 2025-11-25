@@ -67,37 +67,6 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                     width: double.infinity,
-                    child: FilledButton(
-                      child: Text('Iniciar Sesión'),
-                      onPressed: () async {
-                        try {
-                          await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                email: emailCtrl.text.trim(),
-                                password: passwordCtrl.text.trim(),
-                              );
-                        } on FirebaseAuthException catch (ex) {
-                          setState(() {
-                            switch (ex.code) {
-                              case 'channel-error':
-                                msgError = "Ingrese sus credenciales";
-                                break;
-                              case 'invalid-email':
-                                msgError = "Email no válido";
-                                break;
-                              case 'invalid-credential':
-                                msgError = "Credenciales no válidas";
-                                break;
-                              case 'user-disabled':
-                                msgError = "Cuenta desactivada";
-                                break;
-                              default:
-                                msgError = "Error desconodido";
-                            }
-                          });
-                        }
-                      },
-                    ),
                   ),
                   //errores
                   Container(
