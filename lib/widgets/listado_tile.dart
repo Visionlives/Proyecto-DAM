@@ -4,13 +4,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:proyecto_dam/services/eventos_services.dart';
 
-class name extends StatelessWidget {
-  const name({super.key});
+class ListadoTiles extends StatelessWidget {
+  const ListadoTiles({super.key});
 
   String fechaToString(DateTime fecha) {
     return '${fecha.day}/${fecha.month}/${fecha.year} ${fecha.hour}:${fecha.minute}';
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
