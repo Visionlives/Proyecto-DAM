@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:proyecto_dam/pages/navbar_pages/detalle_evento_page.dart';
 import 'package:proyecto_dam/services/eventos_services.dart';
 import 'package:proyecto_dam/utils/app_utils.dart';
 import 'package:proyecto_dam/utils/constantes.dart';
@@ -59,6 +60,22 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
                             startActionPane: ActionPane(
                               motion: ScrollMotion(),
                               children: [
+                                SlidableAction(
+                                  backgroundColor: Colors.green,
+                                  label: 'Ver',
+                                  icon: MdiIcons.viewAgenda,
+                                  onPressed: (context) {
+                                    MaterialPageRoute ruta = MaterialPageRoute(
+                                      builder: (context) =>
+                                          DetalleEventoPage(eventoId: eventos.id.toString(),),                                          
+                                    );
+                                    print('Evento id: ' + eventos.id.toString());
+                                    Navigator.push(
+                                      context,
+                                      ruta,
+                                    ).then((value) => setState(() {}));
+                                  },
+                                ),
                                 SlidableAction(
                                   backgroundColor: Colors.red,
                                   label: 'Borrar',

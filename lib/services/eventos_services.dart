@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proyecto_dam/services/auth_services.dart';
 
@@ -11,6 +13,14 @@ class EventosServices {
 
   Stream<QuerySnapshot> listarEventosPropios() {
     return FirebaseFirestore.instance.collection('eventos').where('autor', isEqualTo: authServices.getCurrentUser()?.email.toString()).snapshots();
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> listarEventoSolo(String eventoId) async {
+    final doc = await FirebaseFirestore.instance
+        .collection('eventos')
+        .doc(eventoId)
+        .get();
+    return doc;
   }
 
   Future<void> agregarEvento(
