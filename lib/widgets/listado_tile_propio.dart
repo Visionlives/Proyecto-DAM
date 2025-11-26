@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:proyecto_dam/services/eventos_services.dart';
 import 'package:proyecto_dam/utils/app_utils.dart';
+import 'package:proyecto_dam/utils/constantes.dart';
 
 class ListadoTilePropio extends StatefulWidget {
   const ListadoTilePropio({super.key});
@@ -16,10 +17,10 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String fechaToString(DateTime fecha) {
-      return '${fecha.day}/${fecha.month}/${fecha.year} ${fecha.hour}:${fecha.minute}';
-    }
+    return '${fecha.day}/${fecha.month}/${fecha.year} ${fecha.hour}:${fecha.minute}';
+  }
 
-    Future<void> refresh() async {
+  Future<void> refresh() async {
     setState(() {});
   }
 
@@ -27,104 +28,152 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () => refresh(),
-      child: Scaffold(        
+      child: Scaffold(
         key: _scaffoldKey,
-        body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: StreamBuilder(
-                stream: EventosServices().listarEventosPropios(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData ||
-                      snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.blue,
-                      ),
-                    );
-                  }
-
-                  return ListView.separated(
-                    separatorBuilder: (context, index) => Divider(),
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      var eventos = snapshot.data!.docs[index];
-                      return Slidable(
-                        startActionPane: ActionPane(
-                           motion: ScrollMotion(),
-                           children: [                            
-                            SlidableAction(
-                               backgroundColor: Colors.red,
-                               label: 'Borrar',
-                               icon: MdiIcons.trashCan,
-                               onPressed: (context) async {
-                                
-                                bool
-                                aceptaBorrar = await AppUtils.showConfirm(
-                                  context,
-                                  'Borrar evento',
-                                  '¿Desea borrar el evento ${eventos['titulo']}?',
-                                );
-                                if (aceptaBorrar) {
-                                  await EventosServices().borrarEvento(eventos.id).then((
-                                    borradoOk,
-                                  ) 
-                                  {                                    
-                                    AppUtils.showSnackbar(
-                                      _scaffoldKey.currentContext!,
-                                      'Evento borrado correctamente',
-                                    );
-                                    setState(() {});                                    
-                                  });
-                                  }
-                               },
-                             ),  
-                           ],
-                         ),                                                       
-                        child: ListTile(
-                          leading: Icon(MdiIcons.cube),
-                          title: Text(eventos['titulo']),
-                          subtitle: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Text('Fecha: '),
-                                  Text(fechaToString((eventos['fecha'] as Timestamp).toDate(),),)
-                                  ],
-                              ),
-                              Row(
-                                children: [
-                                  Text('Lugar: '),
-                                  Text(
-                                    eventos['lugar'],                                
-                                  ),                                  
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text('Categoria: '),
-                                  Text(eventos['categoria']),
-                                ],
-                              ),
-                              Row(children: [
-                                Text('Autor: '),
-                                Text(eventos['autor']),
-                              ],)
-                            ],
+        body: Container(
+          color: Color(cPrimario),
+          child: Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: StreamBuilder(
+                    stream: EventosServices().listarEventosPropios(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData ||
+                          snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: Color(cSecundario),
                           ),
-                        ),
+                        );
+                      }
+
+                      return ListView.separated(
+                        separatorBuilder: (context, index) =>
+                            Divider(color: Colors.white),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          var eventos = snapshot.data!.docs[index];
+                          return Slidable(
+                            startActionPane: ActionPane(
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  backgroundColor: Colors.red,
+                                  label: 'Borrar',
+                                  icon: MdiIcons.trashCan,
+                                  onPressed: (context) async {
+                                    bool
+                                    aceptaBorrar = await AppUtils.showConfirm(
+                                      context,
+                                      'Borrar evento',
+                                      '¿Desea borrar el evento ${eventos['titulo']}?',
+                                    );
+                                    if (aceptaBorrar) {
+                                      await EventosServices()
+                                          .borrarEvento(eventos.id)
+                                          .then((borradoOk) {
+                                            AppUtils.showSnackbar(
+                                              _scaffoldKey.currentContext!,
+                                              'Evento borrado correctamente',
+                                            );
+                                            setState(() {});
+                                          });
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                            child: ListTile(
+                              leading: Icon(MdiIcons.cube),
+                              title: Text(
+                                eventos['titulo'],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(cTerciario),
+                                ),
+                              ),
+                              subtitle: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Fecha: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        fechaToString(
+                                          (eventos['fecha'] as Timestamp)
+                                              .toDate(),
+                                        ),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Lugar: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        eventos['lugar'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Categoria: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        eventos['categoria'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Autor: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        eventos['autor'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      )
-      )
+        ),
+      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:proyecto_dam/services/auth_services.dart';
 import 'package:proyecto_dam/services/categorias_services.dart';
 import 'package:proyecto_dam/services/eventos_services.dart';
+import 'package:proyecto_dam/utils/constantes.dart';
 
 class AgregarEventoPage extends StatefulWidget {
   const AgregarEventoPage({super.key});
@@ -22,7 +23,7 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
   DateTime fecha = DateTime.now();
   TextEditingController horaCtrl = TextEditingController();
   TextEditingController minutoCtrl = TextEditingController();
-  
+
   TextEditingController lugarCtrl = TextEditingController();
   String categoriaSeleccionada = "";
   TextEditingController autorCtrl = TextEditingController();
@@ -34,113 +35,134 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
       children: [
         Expanded(
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(10),
-            child: Form(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    child: Text(
-                      'Agregar Evento',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey,
+                borderRadius: BorderRadius.circular(20),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.white, Color(cTerciario)],
+                ),
+              ),
+              child: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                      child: Text(
+                        'Agregar Evento',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  //titulo del evento
-                  TextFormField(
-                    controller: tituloCtrl,
-                    decoration: InputDecoration(labelText: 'Título'),
-                  ),                  
-                  //Categorias de eventos
-                  FutureBuilder(
-                    future: categoriasServices.listarCategorias(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData ||
-                          snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(color: Colors.blue),
-                        );
-                      }
-                      var categorias = snapshot.data!.docs;
-                      return DropdownButtonFormField<String>(
-                        decoration: InputDecoration(labelText: 'Categoría'),
-                        items: categorias.map<DropdownMenuItem<String>>((
-                          categoria,
-                        ) {
-                          return DropdownMenuItem<String>(
-                            child: Text(categoria['nombre']),
-                            value: categoria['nombre'],
-                          );
-                        }).toList(),
-                        onChanged: (categoria) {
-                          categoriaSeleccionada = categoria!;
-                        },
-                      );
-                    },
-                  ),
-                  //fecha del evento
-                  DatepickerFecha(
-                    onDateChanged: (fechaSeleccionada) {
-                      fecha = fechaSeleccionada;
-                    },
-                  ),
-                  //hora y minuto del evento
-                  TextFormField(
-                    controller: horaCtrl,
-                    decoration: InputDecoration(labelText: 'Horas'),
-                  ),
-                  TextFormField(
-                    controller: minutoCtrl,
-                    decoration: InputDecoration(labelText: 'Minutos'),
-                  ),
-                  //lugar del evento
-                  TextFormField(
-                    controller: lugarCtrl,
-                    decoration: InputDecoration(labelText: 'Lugar'),
-                  ),
-                ],
+                    //titulo del evento
+                    TextFormField(
+                      controller: tituloCtrl,
+                      decoration: InputDecoration(labelText: 'Título'),
+                    ),
+                    //Categorias de eventos
+                    FutureBuilder(
+                      future: categoriasServices.listarCategorias(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (!snapshot.hasData ||
+                                snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Color(cSecundario),
+                                ),
+                              );
+                            }
+                            var categorias = snapshot.data!.docs;
+                            return DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                labelText: 'Categoría',
+                              ),
+                              items: categorias.map<DropdownMenuItem<String>>((
+                                categoria,
+                              ) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(categoria['nombre']),
+                                  value: categoria['nombre'],
+                                );
+                              }).toList(),
+                              onChanged: (categoria) {
+                                categoriaSeleccionada = categoria!;
+                              },
+                            );
+                          },
+                    ),
+                    //fecha del evento
+                    DatepickerFecha(
+                      onDateChanged: (fechaSeleccionada) {
+                        fecha = fechaSeleccionada;
+                      },
+                    ),
+                    //hora y minuto del evento
+                    TextFormField(
+                      controller: horaCtrl,
+                      decoration: InputDecoration(labelText: 'Horas'),
+                    ),
+                    TextFormField(
+                      controller: minutoCtrl,
+                      decoration: InputDecoration(labelText: 'Minutos'),
+                    ),
+                    //lugar del evento
+                    TextFormField(
+                      controller: lugarCtrl,
+                      decoration: InputDecoration(labelText: 'Lugar'),
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
           ),
         ),
         // Botones fijos en la parte inferior
-        Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              //Botón Agregar
-              Container(
-                width: double.infinity,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.amberAccent,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text('AGREGAR EVENTO'),
-                  onPressed: () async {
-                    setState(() {
-                          fecha = DateTime(
-                            fecha.year,
-                            fecha.month,
-                            fecha.day,
-                            int.parse(horaCtrl.text.trim()),
-                            int.parse(minutoCtrl.text.trim()),
-                          );
-                        });
-                    await eventosServices.agregarEvento(
-                      authServices.getCurrentUser()!.email.toString(),
-                      categoriaSeleccionada,
-                      fecha,
-                      lugarCtrl.text.trim(),
-                      tituloCtrl.text.trim(),
-                    );
-                  },
+        Column(
+          children: [
+            //Botón Agregar
+            Container(
+              width: double.infinity,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: Color(cCuaternario),
+                  foregroundColor: Colors.white,
                 ),
-              ),              
-            ],
-          ),
+                child: Text(
+                  'Agregar Evento',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+                onPressed: () async {
+                  setState(() {
+                    fecha = DateTime(
+                      fecha.year,
+                      fecha.month,
+                      fecha.day,
+                      int.parse(horaCtrl.text.trim()),
+                      int.parse(minutoCtrl.text.trim()),
+                    );
+                  });
+                  await eventosServices.agregarEvento(
+                    authServices.getCurrentUser()!.email.toString(),
+                    categoriaSeleccionada,
+                    fecha,
+                    lugarCtrl.text.trim(),
+                    tituloCtrl.text.trim(),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -170,14 +192,18 @@ class _DatepickerFechaState extends State<DatepickerFecha> {
       margin: EdgeInsets.only(top: 15),
       child: Row(
         children: [
-          Text('Fecha del evento:'),
+          Text('Fecha del evento: ', style: TextStyle(fontSize: 16)),
           Text(
             formatearFecha(fechaSeleccionada.toString()),
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Spacer(),
           IconButton(
-            icon: Icon(MdiIcons.calendar, color: Colors.red),
+            icon: Icon(MdiIcons.calendar, color: Colors.black),
             onPressed: () {
               showDatePicker(
                 context: context,
