@@ -4,17 +4,17 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:proyecto_dam/services/eventos_services.dart';
 
-class ListadoTile extends StatefulWidget {
-  const ListadoTile({super.key});
+class ListadoTilePropio extends StatefulWidget {
+  const ListadoTilePropio({super.key});
 
   @override
-  State<ListadoTile> createState() => _ListadoTileState();
+  State<ListadoTilePropio> createState() => _ListadoTilePropioState();
 }
 
-class _ListadoTileState extends State<ListadoTile> {
+class _ListadoTilePropioState extends State<ListadoTilePropio> {
   String fechaToString(DateTime fecha) {
-    return '${fecha.day}/${fecha.month}/${fecha.year} ${fecha.hour}:${fecha.minute}';
-  }
+      return '${fecha.day}/${fecha.month}/${fecha.year} ${fecha.hour}:${fecha.minute}';
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class _ListadoTileState extends State<ListadoTile> {
             child: Padding(
               padding: EdgeInsets.all(10),
               child: StreamBuilder(
-                stream: EventosServices().listarEventos(),
+                stream: EventosServices().listarEventosPropios(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData ||
                       snapshot.connectionState == ConnectionState.waiting) {

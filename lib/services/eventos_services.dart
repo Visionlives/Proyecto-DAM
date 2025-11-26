@@ -1,9 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyecto_dam/services/auth_services.dart';
 
 class EventosServices {
+  AuthServices authServices = AuthServices();
+  
   // Example method to fetch events
   Stream<QuerySnapshot> listarEventos() {
     return FirebaseFirestore.instance.collection('eventos').snapshots();
+  }
+
+  Stream<QuerySnapshot> listarEventosPropios() {
+    String? email = authServices.getEmail().toString();
+    print(email);
+    return FirebaseFirestore.instance.collection('eventos').where('autor', isEqualTo: email).snapshots();
   }
 
   Future<void> agregarEvento(

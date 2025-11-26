@@ -31,4 +31,13 @@ class AuthServices {
       print("ERROR EN LOGOUT: $ex");
     }
   }
+
+  Future<User?> getCurrentUser() async {    
+      return _auth.currentUser;
+  }
+
+  Future<String?> getEmail() async {
+    User? user = _auth.currentUser;
+    return user?.email;
+  }
 }
