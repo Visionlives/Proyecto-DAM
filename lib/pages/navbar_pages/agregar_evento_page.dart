@@ -20,6 +20,9 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
 
   TextEditingController tituloCtrl = TextEditingController();
   DateTime fecha = DateTime.now();
+  TextEditingController horaCtrl = TextEditingController();
+  TextEditingController minutoCtrl = TextEditingController();
+  
   TextEditingController lugarCtrl = TextEditingController();
   String categoriaSeleccionada = "";
   TextEditingController autorCtrl = TextEditingController();
@@ -49,12 +52,7 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                   TextFormField(
                     controller: tituloCtrl,
                     decoration: InputDecoration(labelText: 'Título'),
-                  ),
-                  //autor del evento
-                  TextFormField(
-                    controller: autorCtrl,
-                    decoration: InputDecoration(labelText: 'Autor'),
-                  ),
+                  ),                  
                   //Categorias de eventos
                   FutureBuilder(
                     future: categoriasServices.listarCategorias(),
@@ -90,24 +88,12 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                   ),
                   //hora y minuto del evento
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Hora (HH:MM)'),
-                    keyboardType: TextInputType.datetime,
-                    onChanged: (value) {
-                      List<String> partes = value.split(':');
-                      if (partes.length == 2) {
-                        int hora = int.parse(partes[0]);
-                        int minuto = int.parse(partes[1]);
-                        setState(() {
-                          fecha = DateTime(
-                            fecha.year,
-                            fecha.month,
-                            fecha.day,
-                            hora,
-                            minuto,
-                          );
-                        });
-                      }
-                    },
+                    controller: horaCtrl,
+                    decoration: InputDecoration(labelText: 'Horas'),
+                  ),
+                  TextFormField(
+                    controller: minutoCtrl,
+                    decoration: InputDecoration(labelText: 'Minutos'),
                   ),
                   //lugar del evento
                   TextFormField(
@@ -134,8 +120,17 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                   ),
                   child: Text('AGREGAR EVENTO'),
                   onPressed: () async {
+                    setState(() {
+                          fecha = DateTime(
+                            fecha.year,
+                            fecha.month,
+                            fecha.day,
+                            int.parse(horaCtrl.text.trim()),
+                            int.parse(minutoCtrl.text.trim()),
+                          );
+                        });
                     await eventosServices.agregarEvento(
-                      autorCtrl.text.trim(),
+                      authServices.getCurrentUser()!.email.toString(),
                       categoriaSeleccionada,
                       fecha,
                       lugarCtrl.text.trim(),
@@ -143,22 +138,7 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                     );
                   },
                 ),
-              ),
-              SizedBox(height: 10),
-              //Botón Cerrar Sesión
-              Container(
-                width: double.infinity,
-                child: FilledButton(
-                  child: Text('Cerrar Sesión'),
-                  onPressed: () async {
-                    try {
-                      authServices.logout();
-                    } catch (ex) {
-                      print("ERROR EN BOTON LOGOUT: $ex");
-                    }
-                  },
-                ),
-              ),
+              ),              
             ],
           ),
         ),
@@ -235,142 +215,3 @@ class _DatepickerFechaState extends State<DatepickerFecha> {
     );
   }
 }
-
-// Column(
-//       children: [
-//         Expanded(
-//           child: SingleChildScrollView(
-//             padding: EdgeInsets.all(10),
-//             child: Form(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Container(
-//                     child: Text(
-//                       'Agregar Piloto',
-//                       style: TextStyle(
-//                         fontSize: 18,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ),
-//                   //nombre del piloto
-//                   TextFormField(
-//                     controller: nombreCtrl,
-//                     decoration: InputDecoration(labelText: 'Nombre'),
-//                   ),
-//                   //apellido del piloto
-//                   TextFormField(
-//                     controller: apellidoCtrl,
-//                     decoration: InputDecoration(labelText: 'Apellido'),
-//                   ),
-//                   //Categorias de eventos
-//                   FutureBuilder(
-//                     future: categoriasServices.listarCategorias(),
-//                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-//                       if (!snapshot.hasData ||
-//                           snapshot.connectionState == ConnectionState.waiting) {
-//                         return Center(
-//                           child: CircularProgressIndicator(color: Colors.blue),
-//                         );
-//                       }
-//                       var categorias = snapshot.data!.docs;
-//                       return DropdownButtonFormField<String>(
-//                         decoration: InputDecoration(labelText: 'Categoria'),
-//                         items: categorias.map<DropdownMenuItem<String>>((
-//                           categoria,
-//                         ) {
-//                           return DropdownMenuItem<String>(
-//                             child: Text(categoria['nombre']),
-//                             value: categoria['nombre'],
-//                           );
-//                         }).toList(),
-//                         onChanged: (categoria) {
-//                           categoriaSeleccionada = categoria!;
-//                         },
-//                       );
-//                     },
-//                   ),
-//                   //fecha de nacimiento
-//                   DatepickerFechaNacimiento(
-//                     onDateChanged: (fecha) {
-//                       fechaNacimiento = fecha;
-//                     },
-//                   ),
-//                   //Cantidad de victorias
-//                   TextFormField(
-//                     controller: victoriasCtrl,
-//                     decoration: InputDecoration(labelText: 'Victorias'),
-//                     keyboardType: TextInputType.number,
-//                   ),
-//                   //Campeonatos
-//                   TextFormField(
-//                     controller: campeonatosCtrl,
-//                     decoration: InputDecoration(labelText: 'Campeonatos'),
-//                     keyboardType: TextInputType.number,
-//                   ),
-//                   //Número del auto
-//                   TextFormField(
-//                     controller: numeroAutoCtrl,
-//                     decoration: InputDecoration(labelText: 'Número del Auto'),
-//                     keyboardType: TextInputType.number,
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//         // Botones fijos en la parte inferior
-//         Padding(
-//           padding: EdgeInsets.all(10),
-//           child: Column(
-//             children: [
-//               //Botón Agregar
-//               Container(
-//                 width: double.infinity,
-//                 child: OutlinedButton(
-//                   style: OutlinedButton.styleFrom(
-//                     backgroundColor: Colors.amberAccent,
-//                     foregroundColor: Colors.white,
-//                   ),
-//                   child: Text('AGREGAR PILOTO'),
-//                   onPressed: () async {
-//                     // print(nombreCtrl.text.trim());
-//                     // print(apellidoCtrl.text.trim());
-//                     // print(victoriasCtrl.text.trim());
-//                     // print(campeonatosCtrl.text.trim());
-//                     // print(numeroAutoCtrl.text.trim());
-//                     // print(paisSeleccionado);
-//                     // print(equipoSeleccionado.toString());
-//                     // print(fechaNacimiento.toString());
-//                     await eventosServices.agregarEvento(
-//                       nombreCtrl.text.trim(),
-//                       categoriaSeleccionada,
-//                       fechaNacimiento,
-//                       apellidoCtrl.text.trim(),
-//                       numeroAutoCtrl.text.trim(),
-//                     );
-//                     Navigator.pop(context);
-//                   },
-//                 ),
-//               ),
-//               SizedBox(height: 10),
-//               //Botón Cerrar Sesión
-//               Container(
-//                 width: double.infinity,
-//                 child: FilledButton(
-//                   child: Text('Cerrar Sesión'),
-//                   onPressed: () async {
-//                     try {
-//                       authServices.logout();
-//                     } catch (ex) {
-//                       print("ERROR EN BOTON LOGOUT: $ex");
-//                     }
-//                   },
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ],
-//     );

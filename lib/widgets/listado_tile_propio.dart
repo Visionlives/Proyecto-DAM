@@ -54,22 +54,7 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
                       return Slidable(
                         startActionPane: ActionPane(
                            motion: ScrollMotion(),
-                           children: [
-                            //  SlidableAction(
-                            //    backgroundColor: Colors.purple,
-                            //    label: 'Editar',
-                            //    icon: MdiIcons.pen,
-                            //    onPressed: (context) {
-                            //      Navigator.push(
-                            //        context,
-                            //        MaterialPageRoute(
-                            //          builder: (context) => ProductosEditar(
-                            //            productoId: eventos.id,
-                            //          ),
-                            //        ),
-                            //      );
-                            //    },
-                            //  ),
+                           children: [                            
                             SlidableAction(
                                backgroundColor: Colors.red,
                                label: 'Borrar',

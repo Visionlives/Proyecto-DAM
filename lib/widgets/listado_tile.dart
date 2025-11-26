@@ -40,40 +40,7 @@ class _ListadoTileState extends State<ListadoTile> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var eventos = snapshot.data!.docs[index];
-                      return Slidable(
-                        // startActionPane: ActionPane(
-                        //   motion: ScrollMotion(),
-                        //   children: [
-                        //     SlidableAction(
-                        //       backgroundColor: Colors.purple,
-                        //       label: 'Editar',
-                        //       icon: MdiIcons.pen,
-                        //       onPressed: (context) {
-                        //         Navigator.push(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //             builder: (context) => ProductosEditar(
-                        //               productoId: eventos.id,
-                        //             ),
-                        //           ),
-                        //         );
-                        //       },
-                        //     ),
-                        //   ],
-                        // ),
-                        // endActionPane: ActionPane(
-                        //   motion: ScrollMotion(),
-                        //   children: [
-                        //     SlidableAction(
-                        //       backgroundColor: Colors.red,
-                        //       label: 'Borrar',
-                        //       icon: MdiIcons.trashCan,
-                        //       onPressed: (context) async {
-                        //         await EventosServices().borrarProducto(eventos.id);
-                        //       },
-                        //     ),
-                        //   ],
-                        // ),
+                      return Slidable(                        
                         child: ListTile(
                           leading: Icon(MdiIcons.cube),
                           title: Text(eventos['titulo']),

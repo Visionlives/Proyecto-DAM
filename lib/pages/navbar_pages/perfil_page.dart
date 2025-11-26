@@ -24,7 +24,6 @@ class _PerfilPageState extends State<PerfilPage> {
           ),
           Text('Nombre: ${authServices.getCurrentUser()?.displayName.toString()}'),          
           Text('Correo: ${authServices.getCurrentUser()?.email.toString()}'),
-          Text('Numero de Teléfono: ${authServices.getCurrentUser()?.phoneNumber.toString()}'),
           Spacer(),
           Container(
                 width: double.infinity,
