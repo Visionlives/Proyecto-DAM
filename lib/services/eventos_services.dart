@@ -1,21 +1,27 @@
-import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proyecto_dam/services/auth_services.dart';
 
 class EventosServices {
   AuthServices authServices = AuthServices();
-  
+
   // Example method to fetch events
   Stream<QuerySnapshot> listarEventos() {
     return FirebaseFirestore.instance.collection('eventos').snapshots();
   }
 
   Stream<QuerySnapshot> listarEventosPropios() {
-    return FirebaseFirestore.instance.collection('eventos').where('autor', isEqualTo: authServices.getCurrentUser()?.email.toString()).snapshots();
+    return FirebaseFirestore.instance
+        .collection('eventos')
+        .where(
+          'autor',
+          isEqualTo: authServices.getCurrentUser()?.email.toString(),
+        )
+        .snapshots();
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> listarEventoSolo(String eventoId) async {
+  Future<DocumentSnapshot<Map<String, dynamic>>> listarEventoSolo(
+    String eventoId,
+  ) async {
     final doc = await FirebaseFirestore.instance
         .collection('eventos')
         .doc(eventoId)
@@ -44,8 +50,10 @@ class EventosServices {
   //   // Implementation to update an existing event in an API or database
   // }
 
-
   Future<void> borrarEvento(String eventoId) async {
-    return FirebaseFirestore.instance.collection('eventos').doc(eventoId).delete();
+    return FirebaseFirestore.instance
+        .collection('eventos')
+        .doc(eventoId)
+        .delete();
   }
 }

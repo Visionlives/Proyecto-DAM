@@ -26,8 +26,10 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
 
   TextEditingController lugarCtrl = TextEditingController();
   String categoriaSeleccionada = "";
+  String errorCategoria = "";
   TextEditingController autorCtrl = TextEditingController();
 
+  final llaveFormulario = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     //Formulario de agregar evento
@@ -48,6 +50,7 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                 ),
               ),
               child: Form(
+                key: llaveFormulario,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -66,8 +69,17 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                     TextFormField(
                       controller: tituloCtrl,
                       decoration: InputDecoration(labelText: 'Título'),
+                      validator: (titulo) {
+                        if (titulo == null || titulo.isEmpty) {
+                          return 'Ingrese el título';
+                        }
+                        if (titulo.length < 6) {
+                          return 'El título debe tener al menos 6 caracteres';
+                        }
+                        return null;
+                      },
                     ),
-                    //Categorias de eventos
+                    //Categoria del evento
                     FutureBuilder(
                       future: categoriasServices.listarCategorias(),
                       builder:
@@ -100,6 +112,12 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                             );
                           },
                     ),
+                    // Mensaje de error si no se selecciona categoría
+                    if (errorCategoria.isNotEmpty)
+                      Text(
+                        "Selecciona una categoria",
+                        style: TextStyle(color: Colors.red),
+                      ),
                     //fecha del evento
                     DatepickerFecha(
                       onDateChanged: (fechaSeleccionada) {
@@ -110,15 +128,46 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                     TextFormField(
                       controller: horaCtrl,
                       decoration: InputDecoration(labelText: 'Horas'),
+                      validator: (horas) {
+                        if (horas == null || horas.isEmpty) {
+                          return 'Ingrese las horas';
+                        }
+                        int? horasInt = int.tryParse(horas);
+                        if (horasInt == null || horasInt < 0 || horasInt > 23) {
+                          return 'La hora debe estar entre 0 y 23';
+                        }
+                        return null;
+                      },
                     ),
                     TextFormField(
                       controller: minutoCtrl,
                       decoration: InputDecoration(labelText: 'Minutos'),
+                      validator: (minutos) {
+                        if (minutos == null || minutos.isEmpty) {
+                          return 'Ingrese los minutos';
+                        }
+                        int? minutosInt = int.tryParse(minutos);
+                        if (minutosInt == null ||
+                            minutosInt < 0 ||
+                            minutosInt > 59) {
+                          return 'Los minutos deben estar entre 0 y 59';
+                        }
+                        return null;
+                      },
                     ),
                     //lugar del evento
                     TextFormField(
                       controller: lugarCtrl,
                       decoration: InputDecoration(labelText: 'Lugar'),
+                      validator: (lugar) {
+                        if (lugar == null || lugar.isEmpty) {
+                          return 'El lugar es obligatorio';
+                        }
+                        if (lugar.length < 1) {
+                          return 'El lugar debe tener al menos 1 caracteres';
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(height: 20),
                   ],
@@ -143,22 +192,37 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 onPressed: () async {
-                  setState(() {
-                    fecha = DateTime(
-                      fecha.year,
-                      fecha.month,
-                      fecha.day,
-                      int.parse(horaCtrl.text.trim()),
-                      int.parse(minutoCtrl.text.trim()),
+                  if (llaveFormulario.currentState!.validate() &&
+                      categoriaSeleccionada.isNotEmpty) {
+                    setState(() {
+                      fecha = DateTime(
+                        fecha.year,
+                        fecha.month,
+                        fecha.day,
+                        int.parse(horaCtrl.text.trim()),
+                        int.parse(minutoCtrl.text.trim()),
+                      );
+                    });
+                    await eventosServices.agregarEvento(
+                      authServices.getCurrentUser()!.email.toString(),
+                      categoriaSeleccionada,
+                      fecha,
+                      lugarCtrl.text.trim(),
+                      tituloCtrl.text.trim(),
                     );
-                  });
-                  await eventosServices.agregarEvento(
-                    authServices.getCurrentUser()!.email.toString(),
-                    categoriaSeleccionada,
-                    fecha,
-                    lugarCtrl.text.trim(),
-                    tituloCtrl.text.trim(),
-                  );
+                    setState(() {
+                      errorCategoria = "";
+                      categoriaSeleccionada = "";
+                      tituloCtrl.clear();
+                      horaCtrl.clear();
+                      minutoCtrl.clear();
+                      lugarCtrl.clear();
+                    });
+                  } else {
+                    setState(() {
+                      errorCategoria = "Selecciona una categoria";
+                    });
+                  }
                 },
               ),
             ),

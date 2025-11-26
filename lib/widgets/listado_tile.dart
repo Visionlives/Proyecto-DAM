@@ -4,7 +4,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:proyecto_dam/pages/navbar_pages/detalle_evento_page.dart';
 import 'package:proyecto_dam/services/eventos_services.dart';
-import 'package:proyecto_dam/utils/app_utils.dart';
 import 'package:proyecto_dam/utils/constantes.dart';
 
 class ListadoTile extends StatefulWidget {
@@ -52,8 +51,9 @@ class _ListadoTileState extends State<ListadoTile> {
                             icon: MdiIcons.viewAgenda,
                             onPressed: (context) {
                               MaterialPageRoute ruta = MaterialPageRoute(
-                                builder: (context) =>
-                                    DetalleEventoPage(eventoId: eventos.id.toString(),),                                          
+                                builder: (context) => DetalleEventoPage(
+                                  eventoId: eventos.id.toString(),
+                                ),
                               );
                               print('Evento id: ' + eventos.id.toString());
                               Navigator.push(
@@ -61,7 +61,7 @@ class _ListadoTileState extends State<ListadoTile> {
                                 ruta,
                               ).then((value) => setState(() {}));
                             },
-                          ),                          
+                          ),
                         ],
                       ),
                       child: ListTile(
