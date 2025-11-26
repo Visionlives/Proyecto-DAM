@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:proyecto_dam/pages/navbar_pages/agregar_evento_page.dart';
 import 'package:proyecto_dam/pages/navbar_pages/listado_eventos_page.dart';
+import 'package:proyecto_dam/pages/navbar_pages/listado_eventos_propios_page.dart';
+import 'package:proyecto_dam/pages/navbar_pages/perfil_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,7 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Widget> _paginas = [ListadoEventosPage(), AgregarEventoPage()];
+  List<Widget> _paginas = [ListadoEventosPage(), ListadoEventosPropiosPage(), AgregarEventoPage(), PerfilPage()];
   int _paginaSeleccionada = 0;
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,11 @@ class _HomePageState extends State<HomePage> {
             label: "Listado",
           ),
           NavigationDestination(
+            icon: Icon(MdiIcons.homeOutline, size: 35, color: Colors.amber),
+            selectedIcon: Icon(MdiIcons.home, size: 35, color: Colors.blueGrey),
+            label: "Listado Propio",
+          ),
+          NavigationDestination(
             icon: Icon(MdiIcons.listBoxOutline, size: 35, color: Colors.amber),
             selectedIcon: Icon(
               MdiIcons.listBox,
@@ -49,6 +56,15 @@ class _HomePageState extends State<HomePage> {
               color: Colors.blueGrey,
             ),
             label: "Agregar",
+          ),
+          NavigationDestination(
+            icon: Icon(MdiIcons.listBoxOutline, size: 35, color: Colors.amber),
+            selectedIcon: Icon(
+              MdiIcons.listBox,
+              size: 35,
+              color: Colors.blueGrey,
+            ),
+            label: "Perfil",
           ),
         ],
       ),

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:proyecto_dam/services/auth_services.dart';
 
 class EventosServices {
@@ -35,8 +34,8 @@ class EventosServices {
   //   // Implementation to update an existing event in an API or database
   // }
 
-  // // Example method to delete an event
-  // Future<void> borrarEvento(String eventoId) async {
-  //   // Implementation to delete an event from an API or database
-  // }
+
+  Future<void> borrarEvento(String eventoId) async {
+    return FirebaseFirestore.instance.collection('eventos').doc(eventoId).delete();
+  }
 }

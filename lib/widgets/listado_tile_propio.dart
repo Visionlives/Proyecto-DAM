@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:proyecto_dam/services/eventos_services.dart';
+import 'package:proyecto_dam/utils/app_utils.dart';
 
 class ListadoTilePropio extends StatefulWidget {
   const ListadoTilePropio({super.key});
@@ -12,13 +13,23 @@ class ListadoTilePropio extends StatefulWidget {
 }
 
 class _ListadoTilePropioState extends State<ListadoTilePropio> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   String fechaToString(DateTime fecha) {
       return '${fecha.day}/${fecha.month}/${fecha.year} ${fecha.hour}:${fecha.minute}';
     }
 
+    Future<void> refresh() async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return RefreshIndicator(
+      onRefresh: () => refresh(),
+      child: Scaffold(        
+        key: _scaffoldKey,
+        body: Column(
         children: [
           Expanded(
             child: Padding(
@@ -41,39 +52,52 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
                     itemBuilder: (context, index) {
                       var eventos = snapshot.data!.docs[index];
                       return Slidable(
-                        // startActionPane: ActionPane(
-                        //   motion: ScrollMotion(),
-                        //   children: [
-                        //     SlidableAction(
-                        //       backgroundColor: Colors.purple,
-                        //       label: 'Editar',
-                        //       icon: MdiIcons.pen,
-                        //       onPressed: (context) {
-                        //         Navigator.push(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //             builder: (context) => ProductosEditar(
-                        //               productoId: eventos.id,
-                        //             ),
-                        //           ),
-                        //         );
-                        //       },
-                        //     ),
-                        //   ],
-                        // ),
-                        // endActionPane: ActionPane(
-                        //   motion: ScrollMotion(),
-                        //   children: [
-                        //     SlidableAction(
-                        //       backgroundColor: Colors.red,
-                        //       label: 'Borrar',
-                        //       icon: MdiIcons.trashCan,
-                        //       onPressed: (context) async {
-                        //         await EventosServices().borrarProducto(eventos.id);
-                        //       },
-                        //     ),
-                        //   ],
-                        // ),
+                        startActionPane: ActionPane(
+                           motion: ScrollMotion(),
+                           children: [
+                            //  SlidableAction(
+                            //    backgroundColor: Colors.purple,
+                            //    label: 'Editar',
+                            //    icon: MdiIcons.pen,
+                            //    onPressed: (context) {
+                            //      Navigator.push(
+                            //        context,
+                            //        MaterialPageRoute(
+                            //          builder: (context) => ProductosEditar(
+                            //            productoId: eventos.id,
+                            //          ),
+                            //        ),
+                            //      );
+                            //    },
+                            //  ),
+                            SlidableAction(
+                               backgroundColor: Colors.red,
+                               label: 'Borrar',
+                               icon: MdiIcons.trashCan,
+                               onPressed: (context) async {
+                                
+                                bool
+                                aceptaBorrar = await AppUtils.showConfirm(
+                                  context,
+                                  'Borrar evento',
+                                  '¿Desea borrar el evento ${eventos['titulo']}?',
+                                );
+                                if (aceptaBorrar) {
+                                  await EventosServices().borrarEvento(eventos.id).then((
+                                    borradoOk,
+                                  ) 
+                                  {                                    
+                                    AppUtils.showSnackbar(
+                                      _scaffoldKey.currentContext!,
+                                      'Evento borrado correctamente',
+                                    );
+                                    setState(() {});                                    
+                                  });
+                                  }
+                               },
+                             ),  
+                           ],
+                         ),                                                       
                         child: ListTile(
                           leading: Icon(MdiIcons.cube),
                           title: Text(eventos['titulo']),
@@ -114,6 +138,8 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
             ),
           ),
         ],
-      );
+      )
+      )
+    );
   }
 }
