@@ -32,12 +32,7 @@ class AuthServices {
     }
   }
 
-  Future<User?> getCurrentUser() async {    
+  User? getCurrentUser() {    
       return _auth.currentUser;
-  }
-
-  Future<String?> getEmail() async {
-    User? user = _auth.currentUser;
-    return user?.email;
   }
 }
