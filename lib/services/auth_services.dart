@@ -8,11 +8,9 @@ class AuthServices {
   Future<void> login() async {
     try {
       await _googleSignIn.initialize();
-      final GoogleSignInAccount? usuarioGoogle = await _googleSignIn
-          .authenticate();
+      final GoogleSignInAccount? usuarioGoogle = await _googleSignIn.authenticate();
       if (usuarioGoogle != null) {
-        final GoogleSignInAuthentication googleAuth =
-            await usuarioGoogle.authentication;
+        final GoogleSignInAuthentication googleAuth = await usuarioGoogle.authentication;
         final AuthCredential credential = GoogleAuthProvider.credential(
           idToken: googleAuth.idToken,
         );
@@ -32,7 +30,7 @@ class AuthServices {
     }
   }
 
-  User? getCurrentUser() {    
-      return _auth.currentUser;
+  User? getCurrentUser() {
+    return _auth.currentUser;
   }
 }

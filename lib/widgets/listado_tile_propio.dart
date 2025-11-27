@@ -44,9 +44,7 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
                       if (!snapshot.hasData ||
                           snapshot.connectionState == ConnectionState.waiting) {
                         return Center(
-                          child: CircularProgressIndicator(
-                            color: Color(cSecundario),
-                          ),
+                          child: CircularProgressIndicator(color: Color(cSecundario)),
                         );
                       }
 
@@ -66,8 +64,9 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
                                   icon: MdiIcons.viewAgenda,
                                   onPressed: (context) {
                                     MaterialPageRoute ruta = MaterialPageRoute(
-                                      builder: (context) =>
-                                          DetalleEventoPage(eventoId: eventos.id.toString(),),                                          
+                                      builder: (context) => DetalleEventoPage(
+                                        eventoId: eventos.id.toString(),
+                                      ),
                                     );
                                     print('Evento id: ' + eventos.id.toString());
                                     Navigator.push(
@@ -81,8 +80,7 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
                                   label: 'Borrar',
                                   icon: MdiIcons.trashCan,
                                   onPressed: (context) async {
-                                    bool
-                                    aceptaBorrar = await AppUtils.showConfirm(
+                                    bool aceptaBorrar = await AppUtils.showConfirm(
                                       context,
                                       'Borrar evento',
                                       '¿Desea borrar el evento ${eventos['titulo']}?',
@@ -103,7 +101,29 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
                               ],
                             ),
                             child: ListTile(
-                              leading: Icon(MdiIcons.cube),
+                              leading: eventos['categoria'] == "Charla"
+                                  ? Icon(
+                                      MdiIcons.accountVoice,
+                                      size: 40,
+                                      color: Color(cTerciario),
+                                    )
+                                  : eventos['categoria'] == "Coloquio"
+                                  ? Icon(
+                                      MdiIcons.forumOutline,
+                                      size: 40,
+                                      color: Color(cTerciario),
+                                    )
+                                  : eventos['categoria'] == "Workshop"
+                                  ? Icon(
+                                      MdiIcons.hammerWrench,
+                                      size: 40,
+                                      color: Color(cTerciario),
+                                    )
+                                  : Icon(
+                                      MdiIcons.chatQuestion,
+                                      size: 40,
+                                      color: Color(cTerciario),
+                                    ),
                               title: Text(
                                 eventos['titulo'],
                                 style: TextStyle(
@@ -122,8 +142,7 @@ class _ListadoTilePropioState extends State<ListadoTilePropio> {
                                       ),
                                       Text(
                                         fechaToString(
-                                          (eventos['fecha'] as Timestamp)
-                                              .toDate(),
+                                          (eventos['fecha'] as Timestamp).toDate(),
                                         ),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,

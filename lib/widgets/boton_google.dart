@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:proyecto_dam/services/auth_services.dart';
+import 'package:proyecto_dam/utils/app_utils.dart';
 import 'package:proyecto_dam/utils/constantes.dart';
 
 class BotonGoogle extends StatelessWidget {
@@ -30,15 +31,13 @@ class BotonGoogle extends StatelessWidget {
             },
             child: Icon(MdiIcons.google, color: Colors.white, size: 40),
           ),
-          Text(
-            'Iniciar Sesión',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
+          Text('Iniciar Sesión', style: TextStyle(fontSize: 18, color: Colors.white)),
         ],
       ),
       onPressed: () async {
         try {
-          authServices.login();
+          await authServices.login();
+          AppUtils.showSnackbar(context, 'Inicio de sesión exitoso');
         } catch (ex) {
           print("ERROR EN BOTON LOGIN: $ex");
         }

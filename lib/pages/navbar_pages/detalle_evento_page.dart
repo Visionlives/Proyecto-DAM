@@ -9,9 +9,20 @@ class DetalleEventoPage extends StatelessWidget {
 
   final String eventoId;
 
+  String fechaToString(DateTime fecha) {
+    return '${fecha.day}/${fecha.month}/${fecha.year} ${fecha.hour}:${fecha.minute}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(cSecundario),
+        title: Text(
+          'Detalle del Evento',
+          style: TextStyle(fontSize: 24, color: Colors.black),
+        ),
+      ),
       body: Container(
         color: Color(cPrimario),
         child: Padding(
@@ -21,14 +32,11 @@ class DetalleEventoPage extends StatelessWidget {
             builder:
                 (
                   context,
-                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-                  snapshot,
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot,
                 ) {
                   if (!snapshot.hasData ||
                       snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(color: Colors.amber),
-                    );
+                    return Center(child: CircularProgressIndicator(color: Colors.amber));
                   }
 
                   var eventos = snapshot.data!;
@@ -36,13 +44,13 @@ class DetalleEventoPage extends StatelessWidget {
                   return Container(
                     child: Column(
                       children: [
-                        Container(margin: EdgeInsets.only(top: 40, bottom: 20)),
+                        Container(margin: EdgeInsets.only(top: 10, bottom: 20)),
                         Text(
                           eventos['titulo'],
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
-                            color: Colors.amber,
+                            color: Color(cSecundario),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -51,10 +59,7 @@ class DetalleEventoPage extends StatelessWidget {
                           children: [
                             Text(
                               'Autor: ',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
+                              style: TextStyle(fontSize: 18, color: Colors.white),
                             ),
                             Text(
                               eventos['autor'],
@@ -71,10 +76,7 @@ class DetalleEventoPage extends StatelessWidget {
                           children: [
                             Text(
                               'Lugar: ',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
+                              style: TextStyle(fontSize: 18, color: Colors.white),
                             ),
                             Text(
                               eventos['lugar'],
@@ -91,10 +93,7 @@ class DetalleEventoPage extends StatelessWidget {
                           children: [
                             Text(
                               'Categoria: ',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
+                              style: TextStyle(fontSize: 18, color: Colors.white),
                             ),
                             Text(
                               eventos['categoria'],
@@ -102,6 +101,23 @@ class DetalleEventoPage extends StatelessWidget {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(margin: EdgeInsets.only(top: 20)),
+                        Row(
+                          children: [
+                            Text(
+                              'Fecha: ',
+                              style: TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                            Text(
+                              fechaToString((eventos['fecha'] as Timestamp).toDate()),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18,
                               ),
                             ),
                           ],
@@ -115,14 +131,11 @@ class DetalleEventoPage extends StatelessWidget {
                           builder:
                               (
                                 context,
-                                AsyncSnapshot<
-                                  DocumentSnapshot<Map<String, dynamic>>?
-                                >
+                                AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>?>
                                 snapshot,
                               ) {
                                 if (!snapshot.hasData ||
-                                    snapshot.connectionState ==
-                                        ConnectionState.waiting) {
+                                    snapshot.connectionState == ConnectionState.waiting) {
                                   return Center(
                                     child: CircularProgressIndicator(
                                       color: Color(cSecundario),
@@ -137,6 +150,7 @@ class DetalleEventoPage extends StatelessWidget {
                               },
                         ),
                         Container(padding: EdgeInsets.only(bottom: 40)),
+                        SizedBox(height: 80),
                         Container(
                           padding: EdgeInsets.only(bottom: 40),
                           width: double.infinity,
@@ -147,10 +161,7 @@ class DetalleEventoPage extends StatelessWidget {
                             ),
                             child: Text(
                               'Volver',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
+                              style: TextStyle(fontSize: 18, color: Colors.white),
                             ),
                             onPressed: () => Navigator.pop(context),
                           ),

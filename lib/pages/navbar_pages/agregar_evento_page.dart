@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:proyecto_dam/services/auth_services.dart';
 import 'package:proyecto_dam/services/categorias_services.dart';
 import 'package:proyecto_dam/services/eventos_services.dart';
+import 'package:proyecto_dam/utils/app_utils.dart';
 import 'package:proyecto_dam/utils/constantes.dart';
 
 class AgregarEventoPage extends StatefulWidget {
@@ -73,8 +72,8 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                         if (titulo == null || titulo.isEmpty) {
                           return 'Ingrese el título';
                         }
-                        if (titulo.length < 6) {
-                          return 'El título debe tener al menos 6 caracteres';
+                        if (titulo.length < 5) {
+                          return 'El título debe tener al menos 5 caracteres';
                         }
                         return null;
                       },
@@ -82,35 +81,27 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                     //Categoria del evento
                     FutureBuilder(
                       future: categoriasServices.listarCategorias(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (!snapshot.hasData ||
-                                snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  color: Color(cSecundario),
-                                ),
-                              );
-                            }
-                            var categorias = snapshot.data!.docs;
-                            return DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                labelText: 'Categoría',
-                              ),
-                              items: categorias.map<DropdownMenuItem<String>>((
-                                categoria,
-                              ) {
-                                return DropdownMenuItem<String>(
-                                  child: Text(categoria['nombre']),
-                                  value: categoria['nombre'],
-                                );
-                              }).toList(),
-                              onChanged: (categoria) {
-                                categoriaSeleccionada = categoria!;
-                              },
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData ||
+                            snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(color: Color(cSecundario)),
+                          );
+                        }
+                        var categorias = snapshot.data!.docs;
+                        return DropdownButtonFormField<String>(
+                          decoration: InputDecoration(labelText: 'Categoría'),
+                          items: categorias.map<DropdownMenuItem<String>>((categoria) {
+                            return DropdownMenuItem<String>(
+                              child: Text(categoria['nombre']),
+                              value: categoria['nombre'],
                             );
+                          }).toList(),
+                          onChanged: (categoria) {
+                            categoriaSeleccionada = categoria!;
                           },
+                        );
+                      },
                     ),
                     // Mensaje de error si no se selecciona categoría
                     if (errorCategoria.isNotEmpty)
@@ -118,6 +109,7 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                         "Selecciona una categoria",
                         style: TextStyle(color: Colors.red),
                       ),
+
                     //fecha del evento
                     DatepickerFecha(
                       onDateChanged: (fechaSeleccionada) {
@@ -127,7 +119,7 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                     //hora y minuto del evento
                     TextFormField(
                       controller: horaCtrl,
-                      decoration: InputDecoration(labelText: 'Horas'),
+                      decoration: InputDecoration(labelText: 'Hora de inicio (0-23)'),
                       validator: (horas) {
                         if (horas == null || horas.isEmpty) {
                           return 'Ingrese las horas';
@@ -141,15 +133,13 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                     ),
                     TextFormField(
                       controller: minutoCtrl,
-                      decoration: InputDecoration(labelText: 'Minutos'),
+                      decoration: InputDecoration(labelText: 'Minuto de inicio (0-59)'),
                       validator: (minutos) {
                         if (minutos == null || minutos.isEmpty) {
                           return 'Ingrese los minutos';
                         }
                         int? minutosInt = int.tryParse(minutos);
-                        if (minutosInt == null ||
-                            minutosInt < 0 ||
-                            minutosInt > 59) {
+                        if (minutosInt == null || minutosInt < 0 || minutosInt > 59) {
                           return 'Los minutos deben estar entre 0 y 59';
                         }
                         return null;
@@ -218,6 +208,7 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
                       minutoCtrl.clear();
                       lugarCtrl.clear();
                     });
+                    AppUtils.showSnackbar(context, 'Evento agregado correctamente');
                   } else {
                     setState(() {
                       errorCategoria = "Selecciona una categoria";
@@ -229,79 +220,6 @@ class _AgregarEventoPageState extends State<AgregarEventoPage> {
           ],
         ),
       ],
-    );
-  }
-}
-
-class DatepickerFecha extends StatefulWidget {
-  final Function(DateTime) onDateChanged;
-
-  const DatepickerFecha({super.key, required this.onDateChanged});
-
-  @override
-  State<DatepickerFecha> createState() => _DatepickerFechaState();
-}
-
-class _DatepickerFechaState extends State<DatepickerFecha> {
-  DateTime fechaSeleccionada = DateTime.now();
-
-  String formatearFecha(String fecha) {
-    DateTime fechaDateTime = DateTime.parse(fecha);
-    return DateFormat('dd/MM/yyyy').format(fechaDateTime);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 15),
-      child: Row(
-        children: [
-          Text('Fecha del evento: ', style: TextStyle(fontSize: 16)),
-          Text(
-            formatearFecha(fechaSeleccionada.toString()),
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Spacer(),
-          IconButton(
-            icon: Icon(MdiIcons.calendar, color: Colors.black),
-            onPressed: () {
-              showDatePicker(
-                context: context,
-                initialDate: fechaSeleccionada,
-                firstDate: DateTime(1950),
-                lastDate: DateTime(2050),
-                builder: (context, child) {
-                  return Theme(
-                    data: Theme.of(context).copyWith(
-                      colorScheme: ColorScheme.light(
-                        primary: Colors.blue,
-                        onPrimary: Colors.white,
-                        surface: Colors.white,
-                        onSurface: Colors.black,
-                      ),
-                      dialogTheme: DialogThemeData(
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                    child: child!,
-                  );
-                },
-              ).then((fecha) {
-                if (fecha != null) {
-                  setState(() {
-                    fechaSeleccionada = fecha;
-                  });
-                  widget.onDateChanged(fecha);
-                }
-              });
-            },
-          ),
-        ],
-      ),
     );
   }
 }

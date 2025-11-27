@@ -45,11 +45,6 @@ class EventosServices {
     });
   }
 
-  // // Example method to update an existing event
-  // Future<void> editarEvento(Evento evento) async {
-  //   // Implementation to update an existing event in an API or database
-  // }
-
   Future<void> borrarEvento(String eventoId) async {
     return FirebaseFirestore.instance
         .collection('eventos')

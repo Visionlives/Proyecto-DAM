@@ -51,9 +51,8 @@ class _ListadoTileState extends State<ListadoTile> {
                             icon: MdiIcons.viewAgenda,
                             onPressed: (context) {
                               MaterialPageRoute ruta = MaterialPageRoute(
-                                builder: (context) => DetalleEventoPage(
-                                  eventoId: eventos.id.toString(),
-                                ),
+                                builder: (context) =>
+                                    DetalleEventoPage(eventoId: eventos.id.toString()),
                               );
                               print('Evento id: ' + eventos.id.toString());
                               Navigator.push(
@@ -65,7 +64,29 @@ class _ListadoTileState extends State<ListadoTile> {
                         ],
                       ),
                       child: ListTile(
-                        leading: Icon(MdiIcons.cube),
+                        leading: eventos['categoria'] == "Charla"
+                            ? Icon(
+                                MdiIcons.accountVoice,
+                                size: 40,
+                                color: Color(cSecundario),
+                              )
+                            : eventos['categoria'] == "Coloquio"
+                            ? Icon(
+                                MdiIcons.forumOutline,
+                                size: 40,
+                                color: Color(cSecundario),
+                              )
+                            : eventos['categoria'] == "Workshop"
+                            ? Icon(
+                                MdiIcons.hammerWrench,
+                                size: 40,
+                                color: Color(cSecundario),
+                              )
+                            : Icon(
+                                MdiIcons.chatQuestion,
+                                size: 40,
+                                color: Color(cSecundario),
+                              ),
                         title: Text(
                           eventos['titulo'],
                           style: TextStyle(
@@ -78,14 +99,9 @@ class _ListadoTileState extends State<ListadoTile> {
                           children: [
                             Row(
                               children: [
+                                Text('Fecha: ', style: TextStyle(color: Colors.white)),
                                 Text(
-                                  'Fecha: ',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Text(
-                                  fechaToString(
-                                    (eventos['fecha'] as Timestamp).toDate(),
-                                  ),
+                                  fechaToString((eventos['fecha'] as Timestamp).toDate()),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
@@ -95,10 +111,7 @@ class _ListadoTileState extends State<ListadoTile> {
                             ),
                             Row(
                               children: [
-                                Text(
-                                  'Lugar: ',
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                                Text('Lugar: ', style: TextStyle(color: Colors.white)),
                                 Text(
                                   eventos['lugar'],
                                   style: TextStyle(
@@ -125,10 +138,7 @@ class _ListadoTileState extends State<ListadoTile> {
                             ),
                             Row(
                               children: [
-                                Text(
-                                  'Autor: ',
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                                Text('Autor: ', style: TextStyle(color: Colors.white)),
                                 Text(
                                   eventos['autor'],
                                   style: TextStyle(
